@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Праздничная Гача для Любимой Подруги! 🎉</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: radial-gradient(circle, #1a0b2e 0%, #05010d 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        /* Экраны */
+        .screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 1200px;
+            transition: opacity 0.5s ease;
+        }
+        .hidden {
+            display: none !important;
+            opacity: 0;
+        }
+
+        /* Экран 1: Приветствие */
+        #welcome-screen {
+            text-align: center;
+        }
+        .banner {
+            background: linear-gradient(135deg, rgba(147, 51, 234, 0.2) 0%, rgba(79, 70, 229, 0.2) 100%);
+            border: 2px solid #a855f7;
+            box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
+            border-radius: 20px;
+            padding: 40px 20px;
+            max-width: 600px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .banner h1 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, #f472b6, #c084fc, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        .banner p {
+            font-size: 1.1rem;
+            color: #e2e8f0;
+            line-height: 1.6;
+        }
+        .gacha-btn {
+            background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+            border: none;
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(236, 72, 153, 0.6);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .gacha-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
+        }
+
+        /* Экран 2: Анимация призыва */
+        #summon-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .meteor-shower {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        /* Имитация летящих комет */
+        .meteor {
+            position: absolute;
+            width: 4px;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(168, 85, 247, 1));
+            animation: fall 1.5s linear infinite;
+            opacity: 0;
+        }
+        .meteor.gold {
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(234, 179, 8, 1));
+            width: 6px;
+            height: 200px;
+            animation-duration: 1.8s;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-200px) translateX(200px) rotate(-35deg); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100vh) translateX(-100vh) rotate(-35deg); opacity: 0; }
+        }
+
+        /* Экран 3: Карточки */
+        #cards-screen {
+            flex-direction: column;
+            gap: 30px;
+            width: 100%;
+        }
+        .cards-title {
+            text-align: center;
+            font-size: 2rem;
+            background: linear-gradient(to right, #f472b6, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            width: 100%;
+            padding: 10px;
+        }
+
+        /* 3D Переворот Карты */
+        .card-container {
+            perspective: 1000px;
+            height: 400px;
+            cursor: pointer;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .card-container.flipped .card {
+            transform: rotateY(180deg);
+        }
+
+        /* Стороны карты */
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            border: 2px solid;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* 4 Звезды и 5 Звезд (Легендарка) */
+        .epic {
+            border-color: #a855f7;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+            background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
+        }
+        .legendary {
+            border-color: #eab308;
+            box-shadow: 0 0 25px rgba(234, 179, 8, 0.5);
+            background: linear-gradient(180deg, #2d1a01 0%, #0f172a 100%);
+        }
+
+        /* Лицевая сторона */
+        .card-front-img {
+            width: 100%;
+            height: 60%;
+            object-fit: cover;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+        }
+        .card-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            text-align: center;
+        }
+        .card-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .card-class {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .epic .card-class { background-color: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; }
+        .legendary .card-class { background-color: rgba(234, 179, 8, 0.2); color: #fde047; border: 1px solid #eab308; }
+
+        .stars {
+            color: #eab308;
+            font-size: 1rem;
+            letter-spacing: 2px;
+        }
+
+        /* Обратная сторона */
+        .card-back {
+            transform: rotateY(180deg);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card-back-title {
+            font-size: 1rem;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+        .epic .card-back-title { color: #c084fc; }
+        .legendary .card-back-title { color: #fde047; }
+
+        .card-wish {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            flex-grow: 1;
+            padding-right: 5px;
+            text-align: left;
+            white-space: pre-line;
+        }
+        .card-footer-tip {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            text-align: center;
+            margin-top: 10px;
+            text-transform: uppercase;
+        }
+
+        /* Кастомный скроллбар для длинных текстов */
+        .card-wish::-webkit-scrollbar {
+            width: 4px;
+        }
+        .card-wish::-webkit-scrollbar-thumb {
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+                max-width: 320px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ЭКРАН 1: Приветствие -->
+    <div id="welcome-screen" class="screen">
+        <div class="banner">
+            <h1>Birthday Wish 2026</h1>
+            <p>Уникальное праздничное событие запущено! Настало время сделать свои счастливые крутки и призвать лучшую гильдию друзей!</p>
+        </div>
+        <button class="gacha-btn" onclick="startSummon()">Сделать 5 Круток!</button>
+    </div>
+
+    <!-- ЭКРАН 2: Имитация призыва (Скрыт по умолчанию) -->
+    <div id="summon-screen" class="screen hidden">
+        <div class="meteor-shower" id="shower">
+            <!-- Кометы генерируются скриптом -->
+        </div>
+    </div>
+
+    <!-- ЭКРАН 3: Выдача результатов (Скрыт по умолчанию) -->
+    <div id="cards-screen" class="screen hidden">
+        <h2 class="cards-title">Твоя Праздничная Банда! 🎉</h2>
+        <p style="color: #94a3b8; margin-bottom: 15px;">Нажми на карточку, чтобы открыть пожелание!</p>
+        
+        <div class="cards-grid" id="cards-grid">
+            <!-- Сюда вставляются карточки из скрипта -->
+        </div>
+    </div>
+
+    <script>
+        // ДАННЫЕ УЧАСТНИКОВ (ЗАПОЛНЯЙТЕ ЗДЕСЬ!)
+        const players = [
+            {
+                name: "Ник Первого",
+                class: "Самурай / Мечник",
+                wish: "С днем рождения! Желаю тебе крутых побед и легкого гринда в жизни! Пусть каждый сундук приносит только легендарки.",
+                image: "1.jpg",
+                rarity: "epic" // Фиолетовая карта
+            },
+            {
+                name: "Ник Второго",
+                class: "Некромант чата",
+                wish: "Поздравляю! Спасибо, что ты всегда с нами в самые веселые моменты. Пусть твой запас маны никогда не иссякает!",
+                image: "2.jpg",
+                rarity: "epic"
+            },
+            {
+                name: "Ник Третьего",
+                class: "Сенсей",
+                wish: "С праздником! Желаю тебе оставаться такой же яркой, позитивной и заряжать нас своей космической энергией!",
+                image: "3.jpg",
+                rarity: "epic"
+            },
+            {
+                name: "Ник Четвертого",
+                class: "Кавайный маскот",
+                wish: "С днем рождения, ураа! Много котиков, обнимашек, вкусняшек и чтобы всё задуманное исполнялось на изи!",
+                image: "4.jpg",
+                rarity: "epic"
+            },
+            {
+                name: "Твой Ник 👑",
+                class: "Главная Легендарка (S-класс)",
+                wish: "С днем рождения! Мы так счастливы праздновать этот день вместе. Ты — наше настоящее сокровище, сияй всегда ярче всех!",
+                image: "5.jpg",
+                rarity: "legendary" // Золотая легендарная карта (Ты!)
+            }
+        ];
+
+        // Запуск призыва
+        function startSummon() {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            const summonScreen = document.getElementById('summon-screen');
+            summonScreen.classList.remove('hidden');
+
+            // Генерируем летающие кометы
+            const shower = document.getElementById('shower');
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => {
+                    const meteor = document.createElement('div');
+                    meteor.className = `meteor ${i % 4 === 0 ? 'gold' : ''}`;
+                    meteor.style.left = Math.random() * 100 + '%';
+                    meteor.style.top = Math.random() * -50 + 'px';
+                    meteor.style.animationDelay = Math.random() * 0.5 + 's';
+                    shower.appendChild(meteor);
+                }, i * 150);
+            }
+
+            // Переход к карточкам через 3 секунды
+            setTimeout(() => {
+                summonScreen.classList.add('hidden');
+                showCards();
+            }, 3000);
+        }
+
+        // Показ карточек
+        function showCards() {
+            const cardsScreen = document.getElementById('cards-screen');
+            cardsScreen.classList.remove('hidden');
+
+            const grid = document.getElementById('cards-grid');
+            grid.innerHTML = ''; // Очистка
+
+            players.forEach((player) => {
+                const cardContainer = document.createElement('div');
+                cardContainer.className = 'card-container';
+                
+                // Переворот по клику
+                cardContainer.onclick = function() {
+                    this.classList.toggle('flipped');
+                };
+
+                const starsHtml = player.rarity === 'legendary' ? '⭐️⭐️⭐️⭐️⭐️' : '⭐️⭐️⭐️⭐️';
+
+                cardContainer.innerHTML = `
+                    <div class="card ${player.rarity}">
+                        <!-- Лицевая сторона -->
+                        <div class="card-front">
+                            <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/a855f7/ffffff?text=HERO'">
+                            <div class="card-info">
+                                <div class="card-name">${player.name}</div>
+                                <div class="card-class">${player.class}</div>
+                                <div class="stars">${starsHtml}</div>
+                            </div>
+                        </div>
+                        <!-- Обратная сторона -->
+                        <div class="card-back">
+                            <div class="card-back-title">ПОСЛАНИЕ ОТ ГЕРОЯ</div>
+                            <div class="card-wish">${player.wish}</div>
+                            <div class="card-footer-tip">Нажми, чтобы вернуть</div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(cardContainer);
+            });
+        }
+    </script>
+</body>
+</html>
