@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Праздничная Гача для Любимой Подруги! 🎉</title>
+    <title>Birthday Gacha Event! 🎉</title>
     <style>
         * {
             box-sizing: border-box;
@@ -19,19 +19,18 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
-            overflow-y: auto;
+            overflow: hidden;
             padding: 20px;
         }
 
-        /* Экраны */
+        /* Screens */
         .screen {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             width: 100%;
-            max-width: 1200px;
+            max-width: 600px;
             transition: opacity 0.5s ease;
         }
         .hidden {
@@ -39,7 +38,7 @@
             opacity: 0;
         }
 
-        /* Экран 1: Приветствие */
+        /* Screen 1: Welcome */
         #welcome-screen {
             text-align: center;
         }
@@ -49,7 +48,6 @@
             box-shadow: 0 0 25px rgba(168, 85, 247, 0.4);
             border-radius: 20px;
             padding: 40px 20px;
-            max-width: 600px;
             margin-bottom: 30px;
             backdrop-filter: blur(10px);
         }
@@ -86,7 +84,7 @@
             box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
         }
 
-        /* Экран 2: Анимация призыва */
+        /* Screen 2: Summon Animation */
         #summon-screen {
             position: fixed;
             top: 0;
@@ -105,20 +103,13 @@
             height: 100%;
             overflow: hidden;
         }
-        /* Имитация летящих комет */
         .meteor {
             position: absolute;
-            width: 4px;
-            height: 150px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(168, 85, 247, 1));
-            animation: fall 1.5s linear infinite;
-            opacity: 0;
-        }
-        .meteor.gold {
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(234, 179, 8, 1));
             width: 6px;
             height: 200px;
-            animation-duration: 1.8s;
+            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(234, 179, 8, 1));
+            animation: fall 1.5s linear infinite;
+            opacity: 0;
         }
         @keyframes fall {
             0% { transform: translateY(-200px) translateX(200px) rotate(-35deg); opacity: 0; }
@@ -126,32 +117,31 @@
             100% { transform: translateY(100vh) translateX(-100vh) rotate(-35deg); opacity: 0; }
         }
 
-        /* Экран 3: Карточки */
-        #cards-screen {
+        /* Screen 3: Single Card Display */
+        #card-screen {
             flex-direction: column;
-            gap: 30px;
+            gap: 20px;
             width: 100%;
         }
-        .cards-title {
-            text-align: center;
-            font-size: 2rem;
-            background: linear-gradient(to right, #f472b6, #818cf8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+        .pull-counter {
+            font-size: 1.1rem;
+            color: #fde047;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
-        .cards-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            width: 100%;
-            padding: 10px;
+        .tip-text {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 5px;
         }
 
-        /* 3D Переворот Карты */
+        /* Card 3D Flip */
         .card-container {
             perspective: 1000px;
-            height: 400px;
+            width: 100%;
+            max-width: 310px;
+            height: 450px;
             cursor: pointer;
         }
         .card {
@@ -165,7 +155,7 @@
             transform: rotateY(180deg);
         }
 
-        /* Стороны карты */
+        /* Card Sides */
         .card-front, .card-back {
             position: absolute;
             width: 100%;
@@ -178,19 +168,14 @@
             overflow: hidden;
         }
 
-        /* 4 Звезды и 5 Звезд (Легендарка) */
-        .epic {
-            border-color: #a855f7;
-            box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
-            background: linear-gradient(180deg, #1e1b4b 0%, #0f172a 100%);
-        }
+        /* Legendary S-Class Rarity Styles */
         .legendary {
             border-color: #eab308;
             box-shadow: 0 0 25px rgba(234, 179, 8, 0.5);
             background: linear-gradient(180deg, #2d1a01 0%, #0f172a 100%);
         }
 
-        /* Лицевая сторона */
+        /* Front Side */
         .card-front-img {
             width: 100%;
             height: 60%;
@@ -207,31 +192,32 @@
             text-align: center;
         }
         .card-name {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
             font-weight: bold;
             margin-bottom: 5px;
         }
         .card-class {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            padding: 3px 12px;
+            padding: 4px 15px;
             border-radius: 20px;
             font-weight: bold;
             margin-bottom: 10px;
+            background-color: rgba(234, 179, 8, 0.2); 
+            color: #fde047; 
+            border: 1px solid #eab308;
         }
-        .epic .card-class { background-color: rgba(168, 85, 247, 0.2); color: #c084fc; border: 1px solid #a855f7; }
-        .legendary .card-class { background-color: rgba(234, 179, 8, 0.2); color: #fde047; border: 1px solid #eab308; }
 
         .stars {
             color: #eab308;
-            font-size: 1rem;
+            font-size: 1.1rem;
             letter-spacing: 2px;
         }
 
-        /* Обратная сторона */
+        /* Back Side */
         .card-back {
             transform: rotateY(180deg);
-            padding: 20px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -241,14 +227,15 @@
             font-weight: bold;
             border-bottom: 1px solid rgba(255,255,255,0.1);
             padding-bottom: 8px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fde047;
         }
-        .epic .card-back-title { color: #c084fc; }
-        .legendary .card-back-title { color: #fde047; }
 
         .card-wish {
-            font-size: 0.95rem;
-            line-height: 1.5;
+            font-size: 1rem;
+            line-height: 1.6;
             overflow-y: auto;
             flex-grow: 1;
             padding-right: 5px;
@@ -259,11 +246,10 @@
             font-size: 0.75rem;
             color: #94a3b8;
             text-align: center;
-            margin-top: 10px;
+            margin-top: 15px;
             text-transform: uppercase;
         }
 
-        /* Кастомный скроллбар для длинных текстов */
         .card-wish::-webkit-scrollbar {
             width: 4px;
         }
@@ -272,94 +258,101 @@
             border-radius: 4px;
         }
 
-        @media (max-width: 600px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-                max-width: 320px;
-            }
+        /* Control Buttons */
+        .controls {
+            margin-top: 15px;
+            display: flex;
+            gap: 15px;
         }
     </style>
 </head>
 <body>
 
-    <!-- ЭКРАН 1: Приветствие -->
+    <!-- SCREEN 1: Welcome -->
     <div id="welcome-screen" class="screen">
         <div class="banner">
             <h1>Birthday Wish 2026</h1>
-            <p>Уникальное праздничное событие запущено! Настало время сделать свои счастливые крутки и призвать лучшую гильдию друзей!</p>
+            <p>A unique festive event has started! You have 5 lucky wishes waiting. Summon your friends one by one!</p>
         </div>
-        <button class="gacha-btn" onclick="startSummon()">Сделать 5 Круток!</button>
+        <button class="gacha-btn" onclick="triggerSummon()">PULL X1</button>
     </div>
 
-    <!-- ЭКРАН 2: Имитация призыва (Скрыт по умолчанию) -->
+    <!-- SCREEN 2: Summon Animation -->
     <div id="summon-screen" class="screen hidden">
-        <div class="meteor-shower" id="shower">
-            <!-- Кометы генерируются скриптом -->
-        </div>
+        <div class="meteor-shower" id="shower"></div>
     </div>
 
-    <!-- ЭКРАН 3: Выдача результатов (Скрыт по умолчанию) -->
-    <div id="cards-screen" class="screen hidden">
-        <h2 class="cards-title">Твоя Праздничная Банда! 🎉</h2>
-        <p style="color: #94a3b8; margin-bottom: 15px;">Нажми на карточку, чтобы открыть пожелание!</p>
+    <!-- SCREEN 3: Single Card Display -->
+    <div id="card-screen" class="screen hidden">
+        <div class="pull-counter" id="pull-counter">Pulls remaining: 4/5</div>
+        <div class="tip-text">Tap the card to reveal their secret wish!</div>
         
-        <div class="cards-grid" id="cards-grid">
-            <!-- Сюда вставляются карточки из скрипта -->
+        <div class="card-container" id="card-container">
+            <!-- Card is dynamically injected here -->
+        </div>
+
+        <div class="controls">
+            <button class="gacha-btn" id="next-btn" onclick="triggerSummon()">Next Pull</button>
         </div>
     </div>
 
     <script>
-        // ДАННЫЕ УЧАСТНИКОВ (ЗАПОЛНЯЙТЕ ЗДЕСЬ!)
+        // PLAYERS DATA - All are legendary S-Class heroes! ⭐⭐⭐⭐⭐
         const players = [
             {
-                name: "Ник Первого",
-                class: "Самурай / Мечник",
-                wish: "С днем рождения! Желаю тебе крутых побед и легкого гринда в жизни! Пусть каждый сундук приносит только легендарки.",
-                image: "1.jpg",
-                rarity: "epic" // Фиолетовая карта
+                name: "Blizzard",
+                class: "Mage-Sorcerer (S-Class)",
+                wish: "Happy Birthday! 🥳 I hope your new year of life is filled with epic loot, critical hits in everything you do, and endless mana! Thank you for being such an awesome friend. Let's make some more amazing gaming memories together!",
+                image: "PASTE_BLIZZARDS_IMAGE_URL_HERE",
+                rarity: "legendary"
             },
             {
-                name: "Ник Второго",
-                class: "Некромант чата",
-                wish: "Поздравляю! Спасибо, что ты всегда с нами в самые веселые моменты. Пусть твой запас маны никогда не иссякает!",
-                image: "2.jpg",
-                rarity: "epic"
+                name: "Friend 2 Name",
+                class: "Samurai / Swordsman (S-Class)",
+                wish: "Happy Birthday! Wishing you all the happiness, warmth, and legendary moments in the world!",
+                image: "PASTE_FRIEND_2_IMAGE_URL_HERE",
+                rarity: "legendary"
             },
             {
-                name: "Ник Третьего",
-                class: "Сенсей",
-                wish: "С праздником! Желаю тебе оставаться такой же яркой, позитивной и заряжать нас своей космической энергией!",
-                image: "3.jpg",
-                rarity: "epic"
+                name: "Friend 3 Name",
+                class: "Necromancer (S-Class)",
+                wish: "Happy Birthday! May your day be as amazing and wonderful as you are. Enjoy your special holiday!",
+                image: "PASTE_FRIEND_3_IMAGE_URL_HERE",
+                rarity: "legendary"
             },
             {
-                name: "Ник Четвертого",
-                class: "Кавайный маскот",
-                wish: "С днем рождения, ураа! Много котиков, обнимашек, вкусняшек и чтобы всё задуманное исполнялось на изи!",
-                image: "4.jpg",
-                rarity: "epic"
+                name: "Friend 4 Name",
+                class: "Cute Mascot (S-Class)",
+                wish: "Have a blast today! Sending you lots of love and best wishes. Happy Birthday!",
+                image: "PASTE_FRIEND_4_IMAGE_URL_HERE",
+                rarity: "legendary"
             },
             {
-                name: "Твой Ник 👑",
-                class: "Главная Легендарка (S-класс)",
-                wish: "С днем рождения! Мы так счастливы праздновать этот день вместе. Ты — наше настоящее сокровище, сияй всегда ярче всех!",
-                image: "5.jpg",
-                rarity: "legendary" // Золотая легендарная карта (Ты!)
+                name: "Your Name 👑",
+                class: "Guild Leader (S-Class)",
+                wish: "Happy Birthday, our dearest friend! You are the absolute star of our guild. Never stop shining! We are so lucky to have you.",
+                image: "PASTE_YOUR_IMAGE_URL_HERE",
+                rarity: "legendary"
             }
         ];
 
-        // Запуск призыва
-        function startSummon() {
+        let currentPullIndex = 0;
+
+        function triggerSummon() {
             document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('card-screen').classList.add('hidden');
+            
             const summonScreen = document.getElementById('summon-screen');
             summonScreen.classList.remove('hidden');
 
-            // Генерируем летающие кометы
             const shower = document.getElementById('shower');
+            shower.innerHTML = ''; // Reset meteors
+
+            // Generates purely golden meteors for legendary drops
             for (let i = 0; i < 15; i++) {
                 setTimeout(() => {
                     const meteor = document.createElement('div');
-                    meteor.className = `meteor ${i % 4 === 0 ? 'gold' : ''}`;
+                    meteor.className = 'meteor';
                     meteor.style.left = Math.random() * 100 + '%';
                     meteor.style.top = Math.random() * -50 + 'px';
                     meteor.style.animationDelay = Math.random() * 0.5 + 's';
@@ -367,53 +360,59 @@
                 }, i * 150);
             }
 
-            // Переход к карточкам через 3 секунды
             setTimeout(() => {
                 summonScreen.classList.add('hidden');
-                showCards();
+                displayCard();
             }, 3000);
         }
 
-        // Показ карточек
-        function showCards() {
-            const cardsScreen = document.getElementById('cards-screen');
-            cardsScreen.classList.remove('hidden');
+        function displayCard() {
+            const cardScreen = document.getElementById('card-screen');
+            cardScreen.classList.remove('hidden');
 
-            const grid = document.getElementById('cards-grid');
-            grid.innerHTML = ''; // Очистка
+            const counter = document.getElementById('pull-counter');
+            const remaining = players.length - (currentPullIndex + 1);
+            counter.innerText = `Pulls remaining: ${remaining}/5`;
 
-            players.forEach((player) => {
-                const cardContainer = document.createElement('div');
-                cardContainer.className = 'card-container';
-                
-                // Переворот по клику
-                cardContainer.onclick = function() {
-                    this.classList.toggle('flipped');
-                };
+            const container = document.getElementById('card-container');
+            container.className = 'card-container'; // Reset flip animation
+            
+            const player = players[currentPullIndex];
+            const starsHtml = '⭐️⭐️⭐️⭐️⭐️'; // Always 5 Stars!
 
-                const starsHtml = player.rarity === 'legendary' ? '⭐️⭐️⭐️⭐️⭐️' : '⭐️⭐️⭐️⭐️';
-
-                cardContainer.innerHTML = `
-                    <div class="card ${player.rarity}">
-                        <!-- Лицевая сторона -->
-                        <div class="card-front">
-                            <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/a855f7/ffffff?text=HERO'">
-                            <div class="card-info">
-                                <div class="card-name">${player.name}</div>
-                                <div class="card-class">${player.class}</div>
-                                <div class="stars">${starsHtml}</div>
-                            </div>
-                        </div>
-                        <!-- Обратная сторона -->
-                        <div class="card-back">
-                            <div class="card-back-title">ПОСЛАНИЕ ОТ ГЕРОЯ</div>
-                            <div class="card-wish">${player.wish}</div>
-                            <div class="card-footer-tip">Нажми, чтобы вернуть</div>
+            container.innerHTML = `
+                <div class="card ${player.rarity}">
+                    <div class="card-front">
+                        <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/a855f7/ffffff?text=HERO'">
+                        <div class="card-info">
+                            <div class="card-name">${player.name}</div>
+                            <div class="card-class">${player.class}</div>
+                            <div class="stars">${starsHtml}</div>
                         </div>
                     </div>
-                `;
-                grid.appendChild(cardContainer);
-            });
+                    <div class="card-back">
+                        <div class="card-back-title">Message from Hero</div>
+                        <div class="card-wish">${player.wish}</div>
+                        <div class="card-footer-tip">Tap to flip back</div>
+                    </div>
+                </div>
+            `;
+
+            container.onclick = function() {
+                this.classList.toggle('flipped');
+            };
+
+            const nextBtn = document.getElementById('next-btn');
+            
+            if (currentPullIndex === players.length - 1) {
+                nextBtn.innerText = "All Wishes Unlocked! 🎉";
+                nextBtn.disabled = true;
+                nextBtn.style.opacity = "0.7";
+                nextBtn.style.cursor = "default";
+            } else {
+                nextBtn.innerText = "Pull Next";
+                currentPullIndex++;
+            }
         }
     </script>
 </body>
