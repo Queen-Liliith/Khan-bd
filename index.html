@@ -186,12 +186,12 @@
         /* Front Side */
         .card-front-img {
             width: 100%;
-            height: 60%;
+            height: 55%;
             object-fit: cover;
             border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         .card-info {
-            padding: 15px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -200,20 +200,27 @@
             text-align: center;
         }
         .card-name {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
         .card-class {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
-            padding: 4px 15px;
+            padding: 3px 12px;
             border-radius: 20px;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
             background-color: rgba(234, 179, 8, 0.2); 
             color: #fde047; 
             border: 1px solid #eab308;
+        }
+        .card-stat {
+            font-size: 0.85rem;
+            color: #4ade80; /* Nice green for stats */
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+            margin-bottom: 6px;
         }
 
         .stars {
@@ -342,7 +349,7 @@
     </div>
 
     <script>
-        // PLAYERS DATA - Change values and paste direct postimages links here!
+        // PLAYERS DATA - Added 'stat' property for gaming perks!
         const players = [
             {
                 name: "Yamahowlmoto Genryuusai",
@@ -372,6 +379,7 @@ Happy birthday!`,
             {
                 name: "Karoo",
                 class: "Captain Speedy Duck",
+                stat: "Escape speed +20%", // <--- Добавили характеристику!
                 wish: `Happy Birthday, Khan! 🎉🎂
 Wishing you a wonderful birthday and an amazing year ahead! 
 I hope this year brings you happiness, good health, exciting anime, and countless reasons to smile.
@@ -441,6 +449,9 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             const player = players[currentPullIndex];
             const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
 
+            // Conditional rendering for stat badge
+            const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
+
             container.innerHTML = `
                 <div class="card ${player.rarity}">
                     <div class="card-front">
@@ -448,6 +459,7 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
                         <div class="card-info">
                             <div class="card-name">${player.name}</div>
                             <div class="card-class">${player.class}</div>
+                            ${statHtml}
                             <div class="stars">${starsHtml}</div>
                         </div>
                     </div>
@@ -491,6 +503,7 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
                 };
 
                 const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
+                const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
 
                 cardContainer.innerHTML = `
                     <div class="card ${player.rarity}">
@@ -499,6 +512,7 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
                             <div class="card-info">
                                 <div class="card-name">${player.name}</div>
                                 <div class="card-class">${player.class}</div>
+                                ${statHtml}
                                 <div class="stars">${starsHtml}</div>
                             </div>
                         </div>
