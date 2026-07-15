@@ -264,6 +264,7 @@
             font-weight: bold;
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
             margin-bottom: 8px;
+            white-space: pre-line; /* Чтобы переносы строк в статах отображались корректно */
         }
 
         .stars {
@@ -440,7 +441,7 @@ Have an amazing birthday! 💖🎮✨🌸`,
                 name: "Silly Goose Cat Lover",
                 class: "Cute Mascot (S-Class)",
                 stat: `+1000% calming effect
-+ ∞ sparkle power`
++ ∞ sparkle power`,
                 wish: `happy birthday sweet khan! my idea for your birthday party was that we all take a nap. i got overruled so i wish for you to have the best nap today and whenever you want them. i hope for many blessings for you in the coming year. love, athena 💖`,
                 image: "https://i.pinimg.com/736x/71/83/7b/71837bc663dba16a6b13c0b36ec71c86.jpg",
                 rarity: "legendary"
@@ -449,7 +450,7 @@ Have an amazing birthday! 💖🎮✨🌸`,
                 name: "Lady (Mary)",
                 class: "Your Safe Zone & Forever Friend",
                 stat: `DMC Watch Progress: 15% 🤫 
-                Mood Restoration: MAX`,
+Mood Restoration: MAX`,
                 wish: `Happy Birthday! 🌌✨
 
 Even if we are separated by dimensions, servers, or hundreds of kilometers, remember that for real connection, distance is just a glitch in the system
@@ -538,6 +539,7 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
             
             const player = players[currentPullIndex];
             const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
+            // Безопасная отрисовка статы (проверяем, есть ли она вообще у персонажа)
             const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
 
             container.innerHTML = `
@@ -598,6 +600,7 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 cardContainer.className = 'card-container';
                 
                 const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
+                // Безопасная отрисовка статы для финала
                 const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
                 const wishId = `wish-final-${index}`;
 
