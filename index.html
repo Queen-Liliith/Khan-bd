@@ -303,12 +303,10 @@
             text-align: left;
             white-space: pre-line;
             
-            /* Решение проблемы со скроллом в 3D пространстве */
-            transform: translateZ(0); 
-            -webkit-transform: translateZ(0);
+            /* Разрешаем стандартное поведение тач-скролла браузера */
             -webkit-overflow-scrolling: touch !important; 
-            pointer-events: auto !important;
-            touch-action: pan-y !important; 
+            overflow-scrolling: touch !important;
+            touch-action: auto !important;
         }
         
         .card-footer-tip {
@@ -504,25 +502,15 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
             }, 3000);
         }
 
-        // Обработчик прокрутки
-        function enableTouchScroll(element) {
-            let startY;
-            
-            element.addEventListener('touchstart', function(e) {
-                startY = e.touches[0].pageY;
-                e.stopPropagation();
-            }, { passive: true });
-
-            element.addEventListener('touchmove', function(e) {
-                const moveY = e.touches[0].pageY;
-                const deltaY = startY - moveY;
-                
-                element.scrollTop += deltaY;
-                startY = moveY;
-                
-                e.stopPropagation();
-                if (e.cancelable) e.preventDefault();
-            }, { passive: false });
+        // Функция инициализации переворота карточки с проверкой таргет-элемента
+        function setupCardFlip(container) {
+            container.onclick = function(e) {
+                // Если кликнули/тапнули по блоку с текстом пожелания (.card-wish) или его дочерним элементам, игнорируем переворот
+                if (e.target.closest('.card-wish')) {
+                    return;
+                }
+                this.classList.toggle('flipped');
+            };
         }
 
         function displayCard() {
@@ -556,21 +544,13 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                     </div>
                     <div class="card-back">
                         <div class="card-back-title">Message from Hero</div>
-                        <div class="card-wish" id="current-wish">${player.wish}</div>
+                        <div class="card-wish">${player.wish}</div>
                         <div class="card-footer-tip">Tap to flip back</div>
                     </div>
                 </div>
             `;
 
-            const wishElement = document.getElementById('current-wish');
-            enableTouchScroll(wishElement);
-
-            container.onclick = function(e) {
-                if (e.target.closest('.card-wish')) {
-                    return;
-                }
-                this.classList.toggle('flipped');
-            };
+            setupCardFlip(container);
 
             const nextBtn = document.getElementById('next-btn');
             const showAllBtn = document.getElementById('show-all-btn');
@@ -597,7 +577,6 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 
                 const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
                 const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
-                const wishId = `wish-final-${index}`;
 
                 cardContainer.innerHTML = `
                     <div class="card ${player.rarity}">
@@ -613,25 +592,16 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                                 <div class="stars">${starsHtml}</div>
                             </div>
                         </div>
-                        <div class="card-back" style="pointer-events: auto;">
+                        <div class="card-back">
                             <div class="card-back-title">Message from Hero</div>
-                            <div class="card-wish" id="${wishId}">${player.wish}</div>
+                            <div class="card-wish">${player.wish}</div>
                             <div class="card-footer-tip">Tap to flip back</div>
                         </div>
                     </div>
                 `;
 
                 grid.appendChild(cardContainer);
-
-                const wishElement = document.getElementById(wishId);
-                enableTouchScroll(wishElement);
-
-                cardContainer.onclick = function(e) {
-                    if (e.target.closest('.card-wish')) {
-                        return;
-                    }
-                    this.classList.toggle('flipped');
-                };
+                setupCardFlip(cardContainer);
             });
         }
     </script>
