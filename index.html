@@ -85,7 +85,7 @@
             box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
         }
 
-        /* Screen 2: Summon Animation (Fixed Width & Spreading) */
+        /* Screen 2: Summon Animation */
         #summon-screen {
             position: fixed;
             top: 0;
@@ -195,23 +195,54 @@
             background: linear-gradient(180deg, #2d1a01 0%, #0f172a 100%);
         }
 
-        /* Front Side (Fixed Image Cropping) */
-        .card-front-img {
+        /* Эффект размытого заднего фона для неформатных картинок */
+        .card-front-img-container {
+            position: relative;
             width: 100%;
-            height: 55%;
-            object-fit: contain; /* Картинка теперь не обрезается */
-            background: rgba(0, 0, 0, 0.3); /* Красивая темная подложка */
-            padding: 10px;
-            border-bottom: 2px solid rgba(255,255,255,0.1);
+            height: 58%;
+            border-bottom: 2px solid rgba(255,255,255,0.15);
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
         }
+        
+        /* Задний размытый слой (дублирует картинку персонажа, заполняя пустоты) */
+        .card-bg-blur {
+            position: absolute;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            background-size: cover;
+            background-position: center;
+            filter: blur(12px) brightness(0.5);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Основная картинка (всегда видна полностью, без обрезки) */
+        .card-front-img {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            padding: 10px;
+            z-index: 2;
+        }
+
         .card-info {
-            padding: 12px 15px;
+            padding: 10px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             flex-grow: 1;
             text-align: center;
+            background: #0f172a;
+            position: relative;
+            z-index: 3;
         }
         .card-name {
             font-size: 1.3rem;
@@ -302,7 +333,6 @@
             width: 100%;
             padding: 10px;
         }
-        /* Adjusted height for grid view to keep it compact */
         #final-screen .card-container {
             height: 400px;
             max-width: 100%;
@@ -425,19 +455,16 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             const shower = document.getElementById('shower');
             shower.innerHTML = ''; 
 
-            // Генерация метеоров по всей ширине экрана
             const totalMeteors = 20;
             for (let i = 0; i < totalMeteors; i++) {
                 setTimeout(() => {
                     const meteor = document.createElement('div');
                     meteor.className = 'meteor';
                     
-                    // Распределяем точки спавна от -10% до 110% ширины экрана
                     const randomX = (Math.random() * 120) - 10; 
                     meteor.style.left = randomX + '%';
                     meteor.style.top = (Math.random() * -80) - 100 + 'px';
                     
-                    // Разная скорость и задержка для естественного хаоса
                     const duration = 1.0 + Math.random() * 0.6;
                     meteor.style.animationDuration = duration + 's';
                     
@@ -469,7 +496,10 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             container.innerHTML = `
                 <div class="card ${player.rarity}">
                     <div class="card-front">
-                        <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/eab308/ffffff?text=S-CLASS'">
+                        <div class="card-front-img-container">
+                            <div class="card-bg-blur" style="background-image: url('${player.image}')"></div>
+                            <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/eab308/ffffff?text=S-CLASS'">
+                        </div>
                         <div class="card-info">
                             <div class="card-name">${player.name}</div>
                             <div class="card-class">${player.class}</div>
@@ -522,7 +552,10 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
                 cardContainer.innerHTML = `
                     <div class="card ${player.rarity}">
                         <div class="card-front">
-                            <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/eab308/ffffff?text=S-CLASS'">
+                            <div class="card-front-img-container">
+                                <div class="card-bg-blur" style="background-image: url('${player.image}')"></div>
+                                <img class="card-front-img" src="${player.image}" alt="${player.name}" onerror="this.src='https://placehold.co/300x300/eab308/ffffff?text=S-CLASS'">
+                            </div>
                             <div class="card-info">
                                 <div class="card-name">${player.name}</div>
                                 <div class="card-class">${player.class}</div>
