@@ -208,7 +208,7 @@
             background: #000;
         }
         
-        /* Задний размытый слой (дублирует картинку персонажа, заполняя пустоты) */
+        /* Задний размытый слой */
         .card-bg-blur {
             position: absolute;
             top: -10%;
@@ -222,7 +222,7 @@
             pointer-events: none;
         }
 
-        /* Основная картинка (всегда видна полностью, без обрезки) */
+        /* Основная картинка */
         .card-front-img {
             position: relative;
             max-width: 100%;
@@ -298,9 +298,10 @@
             line-height: 1.6;
             overflow-y: auto;
             flex-grow: 1;
-            padding-right: 5px;
+            padding-right: 8px;
             text-align: left;
             white-space: pre-line;
+            -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
         }
         .card-footer-tip {
             font-size: 0.75rem;
@@ -311,11 +312,14 @@
         }
 
         .card-wish::-webkit-scrollbar {
-            width: 4px;
+            width: 6px;
         }
         .card-wish::-webkit-scrollbar-thumb {
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(255, 255, 255, 0.3);
             border-radius: 4px;
+        }
+        .card-wish::-webkit-scrollbar-track {
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         /* Control Buttons */
@@ -370,8 +374,7 @@
         <div class="pull-counter" id="pull-counter">Pulls remaining: 4/5</div>
         <div class="tip-text">Tap the card to reveal their secret wish!</div>
         
-        <div class="card-container" id="card-container">
-            </div>
+        <div class="card-container" id="card-container"></div>
 
         <div class="controls">
             <button class="gacha-btn" id="next-btn" onclick="triggerSummon()">Pull Next</button>
@@ -382,8 +385,7 @@
     <div id="final-screen" class="screen hidden">
         <h2 style="background: linear-gradient(to right, #f472b6, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; text-align: center;">Your Ultimate Party! 🎉</h2>
         <div class="tip-text">Tap on any S-Class hero to read their special birthday wishes again!</div>
-        <div class="cards-grid" id="final-grid">
-            </div>
+        <div class="cards-grid" id="final-grid"></div>
     </div>
 
     <script>
@@ -506,7 +508,7 @@ Have an amazing birthday! 💖🎮✨🌸`,
                     </div>
                     <div class="card-back">
                         <div class="card-back-title">Message from Hero</div>
-                        <div class="card-wish">${player.wish}</div>
+                        <div class="card-wish" onclick="event.stopPropagation()">${player.wish}</div>
                         <div class="card-footer-tip">Tap to flip back</div>
                     </div>
                 </div>
@@ -562,7 +564,7 @@ Have an amazing birthday! 💖🎮✨🌸`,
                         </div>
                         <div class="card-back">
                             <div class="card-back-title">Message from Hero</div>
-                            <div class="card-wish">${player.wish}</div>
+                            <div class="card-wish" onclick="event.stopPropagation()">${player.wish}</div>
                             <div class="card-footer-tip">Tap to flip back</div>
                         </div>
                     </div>
