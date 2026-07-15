@@ -158,11 +158,11 @@
 
         /* Card 3D Flip */
         .card-container {
-            perspective: 1000px;
+            perspective: 1200px; /* Увеличили глубину */
             width: 100%;
             max-width: 360px;
             height: 580px;
-            max-height: 80vh;
+            max-height: 75vh;
             cursor: pointer;
         }
         .card {
@@ -170,10 +170,23 @@
             height: 100%;
             position: relative;
             transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
         .card-container.flipped .card {
             transform: rotateY(180deg);
+        }
+
+        /* Отключение 3D во время активного скролла для избежания багов на iOS/Android */
+        .card-container.flipped.scrolling .card {
+            transform: none !important;
+            transition: none !important;
+        }
+        .card-container.flipped.scrolling .card-front {
+            display: none !important; /* Скрываем лицо, чтобы не просвечивало */
+        }
+        .card-container.flipped.scrolling .card-back {
+            transform: none !important;
+            backface-visibility: visible !important;
         }
 
         /* Card Sides */
@@ -199,7 +212,7 @@
         .card-front-img-container {
             position: relative;
             width: 100%;
-            height: 55%;
+            height: 52%;
             border-bottom: 2px solid rgba(255,255,255,0.15);
             overflow: hidden;
             display: flex;
@@ -231,7 +244,7 @@
         }
 
         .card-info {
-            padding: 15px 20px;
+            padding: 12px 15px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -243,33 +256,33 @@
             z-index: 3;
         }
         .card-name {
-            font-size: 1.3rem;
+            font-size: 1.25rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 4px;
         }
         .card-class {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            padding: 4px 14px;
+            padding: 3px 12px;
             border-radius: 20px;
             font-weight: bold;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background-color: rgba(234, 179, 8, 0.2); 
             color: #fde047; 
             border: 1px solid #eab308;
         }
         .card-stat {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #4ade80; 
             font-weight: bold;
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             white-space: pre-line;
         }
 
         .stars {
             color: #eab308;
-            font-size: 1.1rem;
+            font-size: 1rem;
             letter-spacing: 2px;
         }
 
@@ -280,6 +293,7 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            background: #0f172a;
         }
         .card-back-title {
             font-size: 1.05rem;
@@ -295,18 +309,20 @@
 
         /* Текстовый контейнер */
         .card-wish {
-            font-size: 1rem;
-            line-height: 1.5;
+            font-size: 0.95rem;
+            line-height: 1.6;
             overflow-y: auto !important;
             flex-grow: 1;
             padding-right: 8px;
             text-align: left;
             white-space: pre-line;
+            color: #f1f5f9;
             
-            /* Разрешаем стандартное поведение тач-скролла браузера */
+            /* Разрешаем нативный скролл */
             -webkit-overflow-scrolling: touch !important; 
             overflow-scrolling: touch !important;
-            touch-action: auto !important;
+            touch-action: pan-y !important; 
+            user-select: text;
         }
         
         .card-footer-tip {
@@ -362,7 +378,7 @@
                 height: 520px;
             }
             .card-wish {
-                font-size: 0.95rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -502,15 +518,25 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
             }, 3000);
         }
 
-        // Функция инициализации переворота карточки с проверкой таргет-элемента
-        function setupCardFlip(container) {
-            container.onclick = function(e) {
-                // Если кликнули/тапнули по блоку с текстом пожелания (.card-wish) или его дочерним элементам, игнорируем переворот
-                if (e.target.closest('.card-wish')) {
-                    return;
+        // Улучшенный обработчик скролла (устраняет конфликт с 3D)
+        function setupScrollHandling(cardContainer, wishElement) {
+            let isScrolling = false;
+
+            wishElement.addEventListener('touchstart', function() {
+                // Если карточка перевернута, вешаем класс для временного отключения 3D-багов
+                if (cardContainer.classList.contains('flipped')) {
+                    cardContainer.classList.add('scrolling');
+                    isScrolling = true;
                 }
-                this.classList.toggle('flipped');
-            };
+            }, { passive: true });
+
+            // Возвращаем 3D режим только когда палец полностью убрали и прокрутка завершена
+            window.addEventListener('touchend', function() {
+                if (isScrolling) {
+                    cardContainer.classList.remove('scrolling');
+                    isScrolling = false;
+                }
+            }, { passive: true });
         }
 
         function displayCard() {
@@ -544,13 +570,22 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                     </div>
                     <div class="card-back">
                         <div class="card-back-title">Message from Hero</div>
-                        <div class="card-wish">${player.wish}</div>
+                        <div class="card-wish" id="current-wish">${player.wish}</div>
                         <div class="card-footer-tip">Tap to flip back</div>
                     </div>
                 </div>
             `;
 
-            setupCardFlip(container);
+            const wishElement = document.getElementById('current-wish');
+            setupScrollHandling(container, wishElement);
+
+            container.onclick = function(e) {
+                // Если кликнули/тапнули по самому тексту пожелания — не флипаем карту назад
+                if (e.target.closest('.card-wish')) {
+                    return;
+                }
+                this.classList.toggle('flipped');
+            };
 
             const nextBtn = document.getElementById('next-btn');
             const showAllBtn = document.getElementById('show-all-btn');
@@ -577,6 +612,7 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 
                 const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
                 const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
+                const wishId = `wish-final-${index}`;
 
                 cardContainer.innerHTML = `
                     <div class="card ${player.rarity}">
@@ -594,14 +630,23 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                         </div>
                         <div class="card-back">
                             <div class="card-back-title">Message from Hero</div>
-                            <div class="card-wish">${player.wish}</div>
+                            <div class="card-wish" id="${wishId}">${player.wish}</div>
                             <div class="card-footer-tip">Tap to flip back</div>
                         </div>
                     </div>
                 `;
 
                 grid.appendChild(cardContainer);
-                setupCardFlip(cardContainer);
+
+                const wishElement = document.getElementById(wishId);
+                setupScrollHandling(cardContainer, wishElement);
+
+                cardContainer.onclick = function(e) {
+                    if (e.target.closest('.card-wish')) {
+                        return;
+                    }
+                    this.classList.toggle('flipped');
+                };
             });
         }
     </script>
