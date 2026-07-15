@@ -85,37 +85,49 @@
             box-shadow: 0 0 35px rgba(236, 72, 153, 0.9);
         }
 
-        /* Screen 2: Summon Animation */
+        /* Screen 2: Summon Animation (Fixed Width & Spreading) */
         #summon-screen {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 100vw;
+            height: 100vh;
             background: #000;
             z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            overflow: hidden;
         }
         .meteor-shower {
-            position: relative;
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            overflow: hidden;
+            pointer-events: none;
         }
         .meteor {
             position: absolute;
-            width: 6px;
-            height: 200px;
-            background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(234, 179, 8, 1));
-            animation: fall 1.5s linear infinite;
+            width: 4px;
+            height: 150px;
+            background: linear-gradient(to bottom, rgba(234, 179, 8, 0), rgba(234, 179, 8, 1));
+            animation: fall 1.2s linear infinite;
             opacity: 0;
+            filter: drop-shadow(0 0 8px rgba(234, 179, 8, 0.8));
         }
         @keyframes fall {
-            0% { transform: translateY(-200px) translateX(200px) rotate(-35deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(100vh) translateX(-100vh) rotate(-35deg); opacity: 0; }
+            0% { 
+                transform: translateY(-150px) translateX(150px) rotate(-30deg); 
+                opacity: 0; 
+            }
+            15% {
+                opacity: 1;
+            }
+            85% { 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateY(110vh) translateX(-110vh) rotate(-30deg); 
+                opacity: 0; 
+            }
         }
 
         /* Screen 3 & 4: Card Display & Final Screen */
@@ -183,11 +195,13 @@
             background: linear-gradient(180deg, #2d1a01 0%, #0f172a 100%);
         }
 
-        /* Front Side */
+        /* Front Side (Fixed Image Cropping) */
         .card-front-img {
             width: 100%;
             height: 55%;
-            object-fit: cover;
+            object-fit: contain; /* Картинка теперь не обрезается */
+            background: rgba(0, 0, 0, 0.3); /* Красивая темная подложка */
+            padding: 10px;
             border-bottom: 2px solid rgba(255,255,255,0.1);
         }
         .card-info {
@@ -217,7 +231,7 @@
         }
         .card-stat {
             font-size: 0.85rem;
-            color: #4ade80; /* Nice green for stats */
+            color: #4ade80; 
             font-weight: bold;
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
             margin-bottom: 6px;
@@ -310,7 +324,6 @@
 </head>
 <body>
 
-    <!-- SCREEN 1: Welcome -->
     <div id="welcome-screen" class="screen">
         <div class="banner">
             <h1>Birthday Wish 2026</h1>
@@ -319,19 +332,16 @@
         <button class="gacha-btn" onclick="triggerSummon()">PULL X1</button>
     </div>
 
-    <!-- SCREEN 2: Summon Animation -->
-    <div id="summon-screen" class="screen hidden">
+    <div id="summon-screen" class="hidden">
         <div class="meteor-shower" id="shower"></div>
     </div>
 
-    <!-- SCREEN 3: Single Card Display -->
     <div id="card-screen" class="screen hidden">
         <div class="pull-counter" id="pull-counter">Pulls remaining: 4/5</div>
         <div class="tip-text">Tap the card to reveal their secret wish!</div>
         
         <div class="card-container" id="card-container">
-            <!-- Card is dynamically injected here -->
-        </div>
+            </div>
 
         <div class="controls">
             <button class="gacha-btn" id="next-btn" onclick="triggerSummon()">Pull Next</button>
@@ -339,17 +349,14 @@
         </div>
     </div>
 
-    <!-- SCREEN 4: Final Full Grid (Reveals in the end) -->
     <div id="final-screen" class="screen hidden">
         <h2 style="background: linear-gradient(to right, #f472b6, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; text-align: center;">Your Ultimate Party! 🎉</h2>
         <div class="tip-text">Tap on any S-Class hero to read their special birthday wishes again!</div>
         <div class="cards-grid" id="final-grid">
-            <!-- All 5 cards will be injected here -->
-        </div>
+            </div>
     </div>
 
     <script>
-        // PLAYERS DATA - Added 'stat' property for gaming perks!
         const players = [
             {
                 name: "Yamahowlmoto Genryuusai",
@@ -366,20 +373,20 @@ Also I hope you'll have more free time with us here and do things together like 
                 rarity: "legendary"
             },
             {
-                name: "Kabigon",
+                name: "Blizz",
                 class: "Best sleepyhead",
                 wish: `Hi, sis 😁 I’m so happy to be celebrating your birthday!
 We’ve been friends for several years now, and we’ve both become “sleepyheads,”
 and I really admire your unwavering dedication.
 I hope you win tickets to a BTS concert someday 😂, and I wish you all the best 😊😊😊
 Happy birthday!`,
-                image: "https://i.pinimg.com/736x/64/b9/95/64b995c86b77a74ca57e61da7301f252.jpg",
+                image: "https://i.pinimg.com/736x/54/fe/ff/54feffefa44ff5813e935f188dda37c3.jpg",
                 rarity: "legendary"
             },
             {
                 name: "Karoo",
                 class: "Captain Speedy Duck",
-                stat: "Escape speed +20%", // <--- Добавили характеристику!
+                stat: "Escape speed +20%",
                 wish: `Happy Birthday, Khan! 🎉🎂
 Wishing you a wonderful birthday and an amazing year ahead! 
 I hope this year brings you happiness, good health, exciting anime, and countless reasons to smile.
@@ -387,7 +394,7 @@ Thank you for always staying up late despite the time difference just to join us
 
 Happy Birthday, Khan! Thank you for being an incredible nakama. Here’s to many more late-night adventures, laughter, and epic victories together.
 Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
-                image: "https://i.pinimg.com/736x/f8/1b/29/f81b292e3d622f08792d09c838ff4f9a.jpg",
+                image: "https://i.pinimg.com/736x/e7/71/69/e77169868d1701e5c3e2fafc7623e90a.jpg",
                 rarity: "legendary"
             },
             {
@@ -416,17 +423,26 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             summonScreen.classList.remove('hidden');
 
             const shower = document.getElementById('shower');
-            shower.innerHTML = ''; // Reset meteors
+            shower.innerHTML = ''; 
 
-            for (let i = 0; i < 15; i++) {
+            // Генерация метеоров по всей ширине экрана
+            const totalMeteors = 20;
+            for (let i = 0; i < totalMeteors; i++) {
                 setTimeout(() => {
                     const meteor = document.createElement('div');
                     meteor.className = 'meteor';
-                    meteor.style.left = Math.random() * 100 + '%';
-                    meteor.style.top = Math.random() * -50 + 'px';
-                    meteor.style.animationDelay = Math.random() * 0.5 + 's';
+                    
+                    // Распределяем точки спавна от -10% до 110% ширины экрана
+                    const randomX = (Math.random() * 120) - 10; 
+                    meteor.style.left = randomX + '%';
+                    meteor.style.top = (Math.random() * -80) - 100 + 'px';
+                    
+                    // Разная скорость и задержка для естественного хаоса
+                    const duration = 1.0 + Math.random() * 0.6;
+                    meteor.style.animationDuration = duration + 's';
+                    
                     shower.appendChild(meteor);
-                }, i * 150);
+                }, i * 120);
             }
 
             setTimeout(() => {
@@ -444,12 +460,10 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             counter.innerText = `Pulls remaining: ${remaining}/5`;
 
             const container = document.getElementById('card-container');
-            container.className = 'card-container'; // Reset flip
+            container.className = 'card-container'; 
             
             const player = players[currentPullIndex];
             const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
-
-            // Conditional rendering for stat badge
             const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
 
             container.innerHTML = `
@@ -492,7 +506,7 @@ Stay awesome, and have the happiest birthday! 💖🎮✨🌸`,
             finalScreen.classList.remove('hidden');
 
             const grid = document.getElementById('final-grid');
-            grid.innerHTML = ''; // Clear prior content
+            grid.innerHTML = ''; 
 
             players.forEach((player) => {
                 const cardContainer = document.createElement('div');
