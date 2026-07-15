@@ -156,13 +156,13 @@
             text-align: center;
         }
 
-        /* Card 3D Flip (Адаптивные размеры) */
+        /* Card 3D Flip */
         .card-container {
             perspective: 1000px;
             width: 100%;
             max-width: 360px;
-            height: 580px; /* Увеличили максимальную высоту */
-            max-height: 80vh; /* Предотвращает выход за границы экрана на коротких дисплеях */
+            height: 580px;
+            max-height: 80vh;
             cursor: pointer;
         }
         .card {
@@ -264,7 +264,7 @@
             font-weight: bold;
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
             margin-bottom: 8px;
-            white-space: pre-line; /* Чтобы переносы строк в статах отображались корректно */
+            white-space: pre-line;
         }
 
         .stars {
@@ -293,17 +293,19 @@
             flex-shrink: 0;
         }
 
-        /* Контейнер текста с полной поддержкой тач-прокрутки */
+        /* Текстовый контейнер */
         .card-wish {
             font-size: 1rem;
             line-height: 1.5;
-            overflow-y: scroll !important; /* Всегда отображаем скроллбар, чтобы было понятно, что текст можно листать */
+            overflow-y: auto !important;
             flex-grow: 1;
             padding-right: 8px;
             text-align: left;
             white-space: pre-line;
             
-            /* Обеспечиваем плавный мобильный скролл */
+            /* Решение проблемы со скроллом в 3D пространстве */
+            transform: translateZ(0); 
+            -webkit-transform: translateZ(0);
             -webkit-overflow-scrolling: touch !important; 
             pointer-events: auto !important;
             touch-action: pan-y !important; 
@@ -362,7 +364,7 @@
                 height: 520px;
             }
             .card-wish {
-                font-size: 0.95rem; /* На смартфонах шрифт чуть-чуть меньше для экономии места */
+                font-size: 0.95rem;
             }
         }
     </style>
@@ -438,8 +440,8 @@ Have an amazing birthday! 💖🎮✨🌸`,
                 rarity: "legendary"
             },
             {
-                name: "Silly Goose Cat Lover",
-                class: "Cute Mascot (S-Class)",
+                name: "Silly Goose",
+                class: "Cozy Cat Whisperer",
                 stat: `+1000% calming effect
 + ∞ sparkle power`,
                 wish: `happy birthday sweet khan! my idea for your birthday party was that we all take a nap. i got overruled so i wish for you to have the best nap today and whenever you want them. i hope for many blessings for you in the coming year. love, athena 💖`,
@@ -502,13 +504,12 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
             }, 3000);
         }
 
-        // Функция принудительного включения прокрутки на тач-устройствах
+        // Обработчик прокрутки
         function enableTouchScroll(element) {
             let startY;
             
             element.addEventListener('touchstart', function(e) {
                 startY = e.touches[0].pageY;
-                // Останавливаем событие клика по карте, чтобы она не перевернулась при касании текста
                 e.stopPropagation();
             }, { passive: true });
 
@@ -516,11 +517,9 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 const moveY = e.touches[0].pageY;
                 const deltaY = startY - moveY;
                 
-                // Проверяем направление и прокручиваем элемент вручную, если стандартное поведение заблокировано
                 element.scrollTop += deltaY;
                 startY = moveY;
                 
-                // Предотвращаем переворот карты и прокрутку основного экрана
                 e.stopPropagation();
                 if (e.cancelable) e.preventDefault();
             }, { passive: false });
@@ -539,7 +538,6 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
             
             const player = players[currentPullIndex];
             const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
-            // Безопасная отрисовка статы (проверяем, есть ли она вообще у персонажа)
             const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
 
             container.innerHTML = `
@@ -564,13 +562,11 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 </div>
             `;
 
-            // Навешиваем обработчики прокрутки
             const wishElement = document.getElementById('current-wish');
             enableTouchScroll(wishElement);
 
             container.onclick = function(e) {
-                // Если кликнули на сам текст пожелания, не переворачиваем карту обратно
-                if (e.target.classList.contains('card-wish')) {
+                if (e.target.closest('.card-wish')) {
                     return;
                 }
                 this.classList.toggle('flipped');
@@ -600,7 +596,6 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
                 cardContainer.className = 'card-container';
                 
                 const starsHtml = '⭐️⭐️⭐️⭐️⭐️';
-                // Безопасная отрисовка статы для финала
                 const statHtml = player.stat ? `<div class="card-stat">💨 ${player.stat}</div>` : '';
                 const wishId = `wish-final-${index}`;
 
@@ -628,12 +623,11 @@ Happy Birthday! Sending you the warmest, tightest hugs ever! 🎂🧁🎈💖�
 
                 grid.appendChild(cardContainer);
 
-                // Включаем жест прокрутки для каждой карты в финальной сетке
                 const wishElement = document.getElementById(wishId);
                 enableTouchScroll(wishElement);
 
                 cardContainer.onclick = function(e) {
-                    if (e.target.classList.contains('card-wish')) {
+                    if (e.target.closest('.card-wish')) {
                         return;
                     }
                     this.classList.toggle('flipped');
