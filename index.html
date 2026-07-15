@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Birthday Gacha Event! 🎉</title>
     <style>
         * {
@@ -21,7 +21,7 @@
             justify-content: center;
             overflow-x: hidden;
             overflow-y: auto;
-            padding: 20px;
+            padding: 15px;
         }
 
         /* Screens */
@@ -133,7 +133,7 @@
         /* Screen 3 & 4: Card Display & Final Screen */
         #card-screen {
             flex-direction: column;
-            gap: 20px;
+            gap: 15px;
             width: 100%;
         }
         #final-screen {
@@ -156,12 +156,12 @@
             text-align: center;
         }
 
-        /* Card 3D Flip */
+        /* Card 3D Flip (УВЕЛИЧЕННЫЙ РАЗМЕР КАРТЫ) */
         .card-container {
             perspective: 1000px;
             width: 100%;
-            max-width: 310px;
-            height: 450px;
+            max-width: 360px; /* Было 310px, стало 360px */
+            height: 550px;    /* Было 450px, стало 550px — теперь места гораздо больше! */
             cursor: pointer;
         }
         .card {
@@ -181,8 +181,8 @@
             width: 100%;
             height: 100%;
             backface-visibility: hidden;
-            border-radius: 15px;
-            border: 2px solid;
+            border-radius: 20px; /* Чуть мягче скругление для большой карты */
+            border: 3px solid;    /* Немного толще рамка */
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -191,15 +191,14 @@
         /* Legendary S-Class Rarity Styles */
         .legendary {
             border-color: #eab308;
-            box-shadow: 0 0 25px rgba(234, 179, 8, 0.5);
+            box-shadow: 0 0 30px rgba(234, 179, 8, 0.6);
             background: linear-gradient(180deg, #2d1a01 0%, #0f172a 100%);
         }
 
-        /* Эффект размытого заднего фона для неформатных картинок */
         .card-front-img-container {
             position: relative;
             width: 100%;
-            height: 58%;
+            height: 60%; /* Картинка теперь занимает 60% высоты */
             border-bottom: 2px solid rgba(255,255,255,0.15);
             overflow: hidden;
             display: flex;
@@ -208,7 +207,6 @@
             background: #000;
         }
         
-        /* Задний размытый слой */
         .card-bg-blur {
             position: absolute;
             top: -10%;
@@ -222,7 +220,6 @@
             pointer-events: none;
         }
 
-        /* Основная картинка */
         .card-front-img {
             position: relative;
             max-width: 100%;
@@ -233,7 +230,7 @@
         }
 
         .card-info {
-            padding: 10px 15px;
+            padding: 15px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -245,81 +242,91 @@
             z-index: 3;
         }
         .card-name {
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             font-weight: bold;
-            margin-bottom: 3px;
+            margin-bottom: 5px;
         }
         .card-class {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            padding: 3px 12px;
+            padding: 4px 14px;
             border-radius: 20px;
             font-weight: bold;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
             background-color: rgba(234, 179, 8, 0.2); 
             color: #fde047; 
             border: 1px solid #eab308;
         }
         .card-stat {
-            font-size: 0.85rem;
+            font-size: 0.9rem;
             color: #4ade80; 
             font-weight: bold;
             text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .stars {
             color: #eab308;
-            font-size: 1.1rem;
+            font-size: 1.2rem;
             letter-spacing: 2px;
         }
 
         /* Back Side */
         .card-back {
             transform: rotateY(180deg);
-            padding: 25px;
+            padding: 25px 20px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
         }
         .card-back-title {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: bold;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1.5px solid rgba(255,255,255,0.15);
             padding-bottom: 8px;
             margin-bottom: 15px;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: #fde047;
+            flex-shrink: 0;
         }
 
+        /* Контейнер текста */
         .card-wish {
-            font-size: 1rem;
+            font-size: 1.05rem; /* Слегка увеличили шрифт для лучшей читаемости */
             line-height: 1.6;
-            overflow-y: auto;
+            overflow-y: auto !important;
             flex-grow: 1;
             padding-right: 8px;
             text-align: left;
             white-space: pre-line;
-            -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+            
+            -webkit-overflow-scrolling: touch !important; 
+            pointer-events: auto !important;
+            touch-action: pan-y !important;
         }
+        
         .card-footer-tip {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: #94a3b8;
             text-align: center;
             margin-top: 15px;
             text-transform: uppercase;
+            flex-shrink: 0;
+            letter-spacing: 1px;
         }
 
+        /* Скроллбар */
         .card-wish::-webkit-scrollbar {
-            width: 6px;
+            width: 6px !important;
+            display: block !important;
         }
         .card-wish::-webkit-scrollbar-thumb {
-            background-color: rgba(255, 255, 255, 0.3);
+            background-color: rgba(254, 224, 71, 0.5) !important;
             border-radius: 4px;
         }
         .card-wish::-webkit-scrollbar-track {
-            background-color: rgba(0, 0, 0, 0.1);
+            background-color: rgba(255, 255, 255, 0.05);
         }
 
         /* Control Buttons */
@@ -332,26 +339,20 @@
         /* Grid for Final Screen */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 25px;
             width: 100%;
             padding: 10px;
         }
         #final-screen .card-container {
-            height: 400px;
+            height: 500px; /* На финальном экране тоже делаем их крупными */
             max-width: 100%;
-        }
-        #final-screen .card-name {
-            font-size: 1.2rem;
-        }
-        #final-screen .card-class {
-            font-size: 0.8rem;
         }
 
         @media (max-width: 600px) {
             .cards-grid {
                 grid-template-columns: 1fr;
-                max-width: 320px;
+                max-width: 360px;
             }
         }
     </style>
@@ -383,7 +384,7 @@
     </div>
 
     <div id="final-screen" class="screen hidden">
-        <h2 style="background: linear-gradient(to right, #f472b6, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; text-align: center;">Your Ultimate Party! 🎉</h2>
+        <h2 style="background: linear-gradient(to right, #f472b6, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-size: 2rem; text-align: center; margin-bottom: 10px;">Your Ultimate Party! 🎉</h2>
         <div class="tip-text">Tap on any S-Class hero to read their special birthday wishes again!</div>
         <div class="cards-grid" id="final-grid"></div>
     </div>
@@ -508,7 +509,10 @@ Have an amazing birthday! 💖🎮✨🌸`,
                     </div>
                     <div class="card-back">
                         <div class="card-back-title">Message from Hero</div>
-                        <div class="card-wish" onclick="event.stopPropagation()">${player.wish}</div>
+                        <div class="card-wish" 
+                             onclick="event.stopPropagation()" 
+                             ontouchstart="event.stopPropagation()" 
+                             ontouchmove="event.stopPropagation()">${player.wish}</div>
                         <div class="card-footer-tip">Tap to flip back</div>
                     </div>
                 </div>
@@ -564,7 +568,10 @@ Have an amazing birthday! 💖🎮✨🌸`,
                         </div>
                         <div class="card-back">
                             <div class="card-back-title">Message from Hero</div>
-                            <div class="card-wish" onclick="event.stopPropagation()">${player.wish}</div>
+                            <div class="card-wish" 
+                                 onclick="event.stopPropagation()" 
+                                 ontouchstart="event.stopPropagation()" 
+                                 ontouchmove="event.stopPropagation()">${player.wish}</div>
                             <div class="card-footer-tip">Tap to flip back</div>
                         </div>
                     </div>
